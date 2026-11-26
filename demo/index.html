@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b3d91">
+<title>TeamKit</title>
+<style>
+  :root{
+    --p:#0b3d91; --a:#f5a623;
+    --bg:#f3f5f9; --card:#fff; --ink:#1b2333; --muted:#6b7487; --line:#e3e7ef;
+    --r:14px; --nav:64px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+  a{color:var(--p);text-decoration:none}
+  #app{max-width:640px;margin:0 auto;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom) + 16px)}
+
+  /* Header */
+  .hero{background:var(--p);color:#fff;padding:calc(env(safe-area-inset-top) + 22px) 20px 26px;border-radius:0 0 22px 22px}
+  .hero-top{display:flex;align-items:center;gap:14px}
+  .logo{width:58px;height:58px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden;color:var(--p);font-weight:800;font-size:20px}
+  .logo img{width:100%;height:100%;object-fit:contain}
+  .hero h1{font-size:22px;line-height:1.2}
+  .hero .sub{opacity:.85;font-size:14px;margin-top:2px}
+  .status{margin-top:18px;background:rgba(255,255,255,.14);border-radius:12px;padding:10px 14px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+  .status .pill{background:var(--a);color:#1b1b1b;border-radius:999px;padding:2px 10px;font-size:13px}
+  .page-title{padding:calc(env(safe-area-inset-top) + 18px) 20px 6px;font-size:24px;font-weight:800}
+
+  /* Layout */
+  .section{padding:14px 16px 0}
+  .section h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 4px 8px}
+  .card{background:var(--card);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 2px rgba(16,24,40,.06);border:1px solid var(--line)}
+  .card h3{font-size:17px;line-height:1.25}
+  .card p{color:var(--muted);font-size:14px;margin-top:4px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:9px 14px;font:600 14px/1 inherit;background:var(--p);color:#fff;cursor:pointer}
+  .btn.ghost{background:transparent;color:var(--p);border:1.5px solid var(--p)}
+  .btn.wide{width:100%;justify-content:center;padding:13px}
+  .chip{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:#eef1f7;color:var(--muted);vertical-align:middle}
+  .chip.game{background:var(--p);color:#fff}
+  .chip.now{background:#16a34a;color:#fff}
+  .chip.accent{background:var(--a);color:#1b1b1b}
+  .meta{font-size:14px;color:var(--muted);margin-top:6px}
+  .meta b{color:var(--ink);font-weight:600}
+
+  /* Next up */
+  .next{border-left:5px solid var(--a)}
+  .next .when{font-size:13px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:.04em}
+
+  /* Schedule */
+  .day{position:sticky;top:0;background:var(--bg);z-index:2;padding:12px 4px 8px;font-weight:800;font-size:16px}
+  .ev{display:flex;gap:12px}
+  .ev .t{flex:none;width:68px;font-weight:700;font-size:15px}
+  .ev .t small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+  .ev .b{flex:1;min-width:0}
+  .past{opacity:.5}
+
+  /* Announcements */
+  .ann{border-left:5px solid var(--p)}
+  .ann .d{font-size:12px;color:var(--muted);font-weight:600}
+
+  /* Checklist */
+  .check{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+  .check:last-child{border-bottom:0}
+  .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--p);flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+  .check.done .box{background:var(--p)}
+  .check.done span{text-decoration:line-through;color:var(--muted)}
+
+  /* FAQ */
+  details{border-bottom:1px solid var(--line);padding:12px 2px}
+  details:last-child{border-bottom:0}
+  summary{font-weight:600;cursor:pointer;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";float:right;color:var(--muted);font-weight:700}
+  details[open] summary::after{content:"–"}
+  details p{color:var(--muted);font-size:14px;margin-top:8px;white-space:pre-line}
+
+  /* Bottom nav */
+  nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+  nav .in{display:flex;width:100%;max-width:640px}
+  nav a{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:11px;font-weight:600}
+  nav a svg{width:24px;height:24px}
+  nav a.on{color:var(--p)}
+  footer{text-align:center;color:var(--muted);font-size:12px;padding:22px 16px 6px}
+  .empty{color:var(--muted);font-size:14px;text-align:center;padding:18px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav><div class="in" id="nav"></div></nav>
+
+<script>
+/* =====================================================================
+   TEAMKIT DATA — this is the only section that changes for each client.
+   Times are local event time, 24-hour format ("18:30").
+   ===================================================================== */
+const TRIP = {
+  brand: {
+    teamName:  "Thunder 12U Baseball",           // shown in header
+    eventName: "Lone Star Summer Classic",       // tournament / event / trip name
+    initials:  "T",                              // shown if no logo
+    logo:      "",                               // optional image URL or data URI
+    primary:   "#0b3d91",                        // main team color
+    accent:    "#f5a623"                         // highlight color
+  },
+  dates: { start: "2027-06-11", end: "2027-06-13", location: "Frisco, TX" },
+
+  welcome: "Everything for tournament weekend in one place. Save this page to your home screen.",
+
+  announcements: [
+    { date: "Jun 10", text: "Friday game moved to Field 4. Arrive 60 minutes early for warmups." },
+    { date: "Jun 8",  text: "Team dinner Saturday is confirmed — RSVP to the team manager by Thursday." }
+  ],
+
+  // type: game | practice | team | meal | travel | free
+  // place: an id from PLACES below, or any plain text
+  schedule: [
+    { date:"2027-06-11", time:"15:00", end:"16:00", type:"travel",   title:"Hotel check-in opens", place:"hotel" },
+    { date:"2027-06-11", time:"17:00", end:"18:00", type:"practice", title:"Warmups", place:"fields", details:"Bring both jerseys." },
+    { date:"2027-06-11", time:"18:00", end:"20:00", type:"game",     title:"Pool Play — Game 1", place:"fields", opponent:"Rangers Select", uniform:"White jerseys / grey pants", details:"Field 4. Home dugout (3rd base)." },
+    { date:"2027-06-12", time:"08:00", end:"09:00", type:"meal",     title:"Team breakfast", place:"hotel", details:"Hotel breakfast area." },
+    { date:"2027-06-12", time:"10:00", end:"12:00", type:"game",     title:"Pool Play — Game 2", place:"fields", opponent:"Storm Elite", uniform:"Blue jerseys / grey pants", details:"Field 2." },
+    { date:"2027-06-12", time:"14:30", end:"16:30", type:"game",     title:"Pool Play — Game 3", place:"fields", opponent:"Mustangs", uniform:"White jerseys / grey pants", details:"Field 4." },
+    { date:"2027-06-12", time:"18:30", end:"20:00", type:"team",     title:"Team dinner", place:"Pizza Barn (see Food)", details:"Players + families. Team covers player meals." },
+    { date:"2027-06-13", time:"09:00", end:"11:00", type:"game",     title:"Bracket — Round 1", place:"fields", details:"Time and opponent posted Saturday night." },
+    { date:"2027-06-13", time:"11:00", end:"12:00", type:"travel",   title:"Hotel checkout", place:"hotel" },
+    { date:"2027-06-13", time:"13:00", end:"17:00", type:"game",     title:"Bracket — Later rounds (if we advance)", place:"fields" }
+  ],
+
+  places: [
+    { id:"hotel",  kind:"Hotel",  name:"Sample Inn & Suites", address:"Frisco, TX", phone:"555-0100", notes:"Team block under \"Thunder Baseball\". Free breakfast 6:30–9:30." },
+    { id:"fields", kind:"Fields", name:"Sample Sports Complex", address:"Frisco, TX", notes:"Parking $10 cash. Bring chairs and a wagon — it's a long walk from parking." }
+  ],
+
+  food: [
+    { kind:"Team dinner", name:"Pizza Barn", address:"Frisco, TX", notes:"Saturday 6:30 pm. Back room reserved." },
+    { kind:"Quick bite",  name:"Sample Taco Stand", address:"Frisco, TX", notes:"5 minutes from the fields. Good between games." },
+    { kind:"Groceries",   name:"Sample Market", address:"Frisco, TX", notes:"Snacks, ice, Gatorade." }
+  ],
+
+  contacts: [
+    { role:"Head Coach",   name:"Coach Ramirez", phone:"555-0101" },
+    { role:"Team Manager", name:"Team Manager",  phone:"555-0102", email:"manager@example.com" }
+  ],
+
+  packing: [
+    "Both jerseys (white + blue)", "Grey pants, belt, socks", "Cleats + turf shoes", "Glove, bat, helmet",
+    "Water bottle", "Sunscreen", "Folding chairs", "Wagon or cart", "Cash for parking", "Phone charger"
+  ],
+
+  info: [
+    { q:"Where do we park?", a:"Main lot off the entrance road. $10 cash per car, all day." },
+    { q:"What if it rains?", a:"Watch Announcements on this page. Delays are posted as soon as the tournament tells us." },
+    { q:"Can siblings come to team dinner?", a:"Yes — families are welcome. Team covers player meals only." }
+  ],
+
+  links: [
+    { label:"Tournament brackets", url:"https://example.com" },
+    { label:"Frisco weather",      url:"https://weather.com" }
+  ]
+};
+/* ===================== END TEAMKIT DATA ===================== */
+
+
+/* ---------- App (no changes needed below) ---------- */
+(function(){
+  const $app = document.getElementById('app'), $nav = document.getElementById('nav');
+  const B = TRIP.brand || {};
+  document.documentElement.style.setProperty('--p', B.primary || '#0b3d91');
+  document.documentElement.style.setProperty('--a', B.accent || '#f5a623');
+  document.querySelector('meta[name="theme-color"]').content = B.primary || '#0b3d91';
+  document.title = (B.teamName || 'TeamKit') + ' · ' + (B.eventName || '');
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const maps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+  const tel = p => 'tel:' + String(p).replace(/[^\d+]/g,'');
+  const sms = p => 'sms:' + String(p).replace(/[^\d+]/g,'');
+  const placeById = id => (TRIP.places || []).find(p => p.id === id);
+
+  const dt = (d, t) => new Date(d + 'T' + (t || '00:00') + ':00');
+  const fmtTime = t => { if(!t) return ''; let [h,m] = t.split(':').map(Number); const ap = h>=12?'pm':'am'; h = h%12||12; return h + (m?':'+String(m).padStart(2,'0'):'') + ' ' + ap; };
+  const fmtDay = d => dt(d).toLocaleDateString(undefined,{weekday:'long', month:'short', day:'numeric'});
+  const fmtRange = () => { const s = dt(TRIP.dates.start), e = dt(TRIP.dates.end); const o = {month:'short', day:'numeric'}; return s.toLocaleDateString(undefined,o) + (TRIP.dates.end !== TRIP.dates.start ? ' – ' + e.toLocaleDateString(undefined,o) : '') + ', ' + s.getFullYear(); };
+
+  const events = (TRIP.schedule || []).map((e,i) => {
+    const s = dt(e.date, e.time), en = e.end ? dt(e.date, e.end) : new Date(s.getTime() + 60*60*1000);
+    return Object.assign({}, e, {i, s, en});
+  }).sort((a,b) => a.s - b.s);
+
+  function status(){
+    const now = new Date(), s = dt(TRIP.dates.start), e = dt(TRIP.dates.end, '23:59');
+    if (now < s) { const d = Math.ceil((s - now)/864e5); return d <= 1 ? ['Starts tomorrow','Get packed'] : ['Starts in ' + d + ' days', 'Countdown']; }
+    if (now <= e) { const total = Math.round((e - s)/864e5); const day = Math.floor((now - s)/864e5) + 1; return ['Day ' + day + ' of ' + Math.max(total,1), 'Live']; }
+    return ['Trip complete — thanks for coming!', 'Done'];
+  }
+
+  function placeLine(p){
+    if (!p) return '';
+    const pl = placeById(p);
+    if (pl) return '<a href="' + maps(pl.name + ', ' + pl.address) + '" target="_blank" rel="noopener">📍 ' + esc(pl.name) + '</a>';
+    return '📍 ' + esc(p);
+  }
+
+  function eventCard(e, now){
+    const live = now >= e.s && now < e.en, past = now >= e.en;
+    const chip = live ? '<span class="chip now">NOW</span>' : (e.type ? '<span class="chip ' + (e.type==='game'?'game':'') + '">' + esc(e.type) + '</span>' : '');
+    return '<div class="card ev' + (past?' past':'') + '">' +
+      '<div class="t">' + fmtTime(e.time) + (e.end ? '<small>to ' + fmtTime(e.end) + '</small>' : '') + '</div>' +
+      '<div class="b"><h3>' + esc(e.title) + ' ' + chip + '</h3>' +
+      (e.opponent ? '<div class="meta">vs <b>' + esc(e.opponent) + '</b></div>' : '') +
+      (e.place ? '<div class="meta">' + placeLine(e.place) + '</div>' : '') +
+      (e.uniform ? '<div class="meta">👕 ' + esc(e.uniform) + '</div>' : '') +
+      (e.details ? '<p>' + esc(e.details) + '</p>' : '') +
+      '</div></div>';
+  }
+
+  /* ---------- Pages ---------- */
+  function home(){
+    const [st, tag] = status(), now = new Date();
+    const next = events.find(e => e.en > now);
+    const logo = B.logo ? '<img src="' + esc(B.logo) + '" alt="">' : esc(B.initials || (B.teamName||'T')[0]);
+    const quick = (TRIP.places || []).map(p => '<a class="btn ghost" href="' + maps(p.name + ', ' + p.address) + '" target="_blank" rel="noopener">📍 ' + esc(p.kind || p.name) + '</a>').join('');
+    return '<header class="hero"><div class="hero-top"><div class="logo">' + logo + '</div><div><h1>' + esc(B.teamName) + '</h1>' +
+      '<div class="sub">' + esc(B.eventName) + '</div><div class="sub">' + fmtRange() + (TRIP.dates.location ? ' · ' + esc(TRIP.dates.location) : '') + '</div></div></div>' +
+      '<div class="status"><span>' + st + '</span><span class="pill">' + tag + '</span></div></header>' +
+      '<div class="section">' +
+        (next ? '<h2>Next up</h2><div class="card next"><div class="when">' + (now >= next.s ? 'Happening now' : fmtDay(next.date) + ' · ' + fmtTime(next.time)) + '</div>' +
+          '<h3 style="margin-top:4px">' + esc(next.title) + '</h3>' +
+          (next.opponent ? '<div class="meta">vs <b>' + esc(next.opponent) + '</b></div>' : '') +
+          (next.place ? '<div class="meta">' + placeLine(next.place) + '</div>' : '') +
+          (next.uniform ? '<div class="meta">👕 ' + esc(next.uniform) + '</div>' : '') +
+          '<div class="row"><a class="btn" href="#schedule">Full schedule</a></div></div>' : '') +
+        ((TRIP.announcements||[]).length ? '<h2>Announcements</h2>' + TRIP.announcements.map(a => '<div class="card ann"><div class="d">' + esc(a.date) + '</div><div>' + esc(a.text) + '</div></div>').join('') : '') +
+        (quick ? '<h2>Directions</h2><div class="card"><div class="row" style="margin-top:0">' + quick + '</div></div>' : '') +
+        (TRIP.welcome ? '<div class="card"><p style="margin:0">' + esc(TRIP.welcome) + '</p></div>' : '') +
+      '</div>';
+  }
+
+  function schedule(){
+    const now = new Date(); let html = '<div class="page-title">Schedule</div><div class="section">', last = '';
+    events.forEach(e => { if (e.date !== last){ html += '<div class="day">' + fmtDay(e.date) + '</div>'; last = e.date; } html += eventCard(e, now); });
+    if (!events.length) html += '<div class="empty">Schedule coming soon.</div>';
+    html += '<button class="btn wide" id="ics" style="margin-top:8px">📅 Add all to my calendar</button></div>';
+    return html;
+  }
+
+  function places(){
+    const list = TRIP.places || [];
+    return '<div class="page-title">Places</div><div class="section">' + (list.length ? list.map(p =>
+      '<div class="card"><span class="chip accent">' + esc(p.kind) + '</span><h3 style="margin-top:6px">' + esc(p.name) + '</h3>' +
+      (p.address ? '<div class="meta">' + esc(p.address) + '</div>' : '') + (p.notes ? '<p>' + esc(p.notes) + '</p>' : '') +
+      '<div class="row"><a class="btn" href="' + maps(p.name + ', ' + p.address) + '" target="_blank" rel="noopener">Directions</a>' +
+      (p.phone ? '<a class="btn ghost" href="' + tel(p.phone) + '">Call</a>' : '') + '</div></div>').join('') : '<div class="empty">Nothing here yet.</div>') + '</div>';
+  }
+
+  function food(){
+    const list = TRIP.food || [];
+    return '<div class="page-title">Food</div><div class="section">' + (list.length ? list.map(f =>
+      '<div class="card"><span class="chip accent">' + esc(f.kind) + '</span><h3 style="margin-top:6px">' + esc(f.name) + '</h3>' +
+      (f.notes ? '<p>' + esc(f.notes) + '</p>' : '') +
+      '<div class="row"><a class="btn" href="' + maps(f.name + ', ' + (f.address||'')) + '" target="_blank" rel="noopener">Directions</a>' +
+      (f.link ? '<a class="btn ghost" href="' + esc(f.link) + '" target="_blank" rel="noopener">Menu</a>' : '') + '</div></div>').join('') : '<div class="empty">Nothing here yet.</div>') + '</div>';
+  }
+
+  const PACK_KEY = 'teamkit-pack-' + (B.teamName||'') + (TRIP.dates.start||'');
+  function getPack(){ try { return JSON.parse(localStorage.getItem(PACK_KEY) || '[]'); } catch(e){ return window.__pack || []; } }
+  function setPack(v){ window.__pack = v; try { localStorage.setItem(PACK_KEY, JSON.stringify(v)); } catch(e){} }
+
+  function more(){
+    const done = getPack();
+    const contacts = (TRIP.contacts||[]).map(c => '<div class="card"><div class="meta" style="margin:0">' + esc(c.role) + '</div><h3>' + esc(c.name) + '</h3><div class="row">' +
+      (c.phone ? '<a class="btn" href="' + tel(c.phone) + '">Call</a><a class="btn ghost" href="' + sms(c.phone) + '">Text</a>' : '') +
+      (c.email ? '<a class="btn ghost" href="mailto:' + esc(c.email) + '">Email</a>' : '') + '</div></div>').join('');
+    const pack = (TRIP.packing||[]).map((p,i) => '<div class="check' + (done.includes(i)?' done':'') + '" data-i="' + i + '"><div class="box">' + (done.includes(i)?'✓':'') + '</div><span>' + esc(p) + '</span></div>').join('');
+    const faq = (TRIP.info||[]).map(f => '<details><summary>' + esc(f.q) + '</summary><p>' + esc(f.a) + '</p></details>').join('');
+    const links = (TRIP.links||[]).map(l => '<a class="btn ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.label) + ' ↗</a>').join('');
+    return '<div class="page-title">More</div><div class="section">' +
+      (contacts ? '<h2>Contacts</h2>' + contacts : '') +
+      (pack ? '<h2>Packing list</h2><div class="card" style="padding:4px 14px">' + pack + '</div>' : '') +
+      (faq ? '<h2>Good to know</h2><div class="card" style="padding:2px 14px">' + faq + '</div>' : '') +
+      (links ? '<h2>Links</h2><div class="card"><div class="row" style="margin-top:0">' + links + '</div></div>' : '') +
+      '</div>';
+  }
+
+  /* ---------- Calendar export (.ics) ---------- */
+  function downloadICS(){
+    const f = d => d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + 'T' + String(d.getHours()).padStart(2,'0') + String(d.getMinutes()).padStart(2,'0') + '00';
+    const clean = s => String(s||'').replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
+    const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//TeamKit//EN','CALSCALE:GREGORIAN'];
+    events.forEach(e => {
+      const pl = placeById(e.place);
+      const loc = pl ? pl.name + ', ' + pl.address : (e.place || '');
+      const desc = [e.opponent ? 'vs ' + e.opponent : '', e.uniform ? 'Uniform: ' + e.uniform : '', e.details || ''].filter(Boolean).join('\n');
+      lines.push('BEGIN:VEVENT','UID:teamkit-' + e.i + '-' + f(e.s) + '@teamkit','DTSTAMP:' + f(new Date()),'DTSTART:' + f(e.s),'DTEND:' + f(e.en),
+        'SUMMARY:' + clean((B.teamName ? B.teamName + ': ' : '') + e.title),'LOCATION:' + clean(loc),'DESCRIPTION:' + clean(desc),'END:VEVENT');
+    });
+    lines.push('END:VCALENDAR');
+    const blob = new Blob([lines.join('\r\n')], {type:'text/calendar'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = (B.eventName || 'schedule').replace(/[^\w]+/g,'-') + '.ics';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  /* ---------- Router ---------- */
+  const icons = {
+    home:'<path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/>',
+    schedule:'<rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/>',
+    places:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+    food:'<path d="M7 2v9M4 2v6a3 3 0 0 0 6 0V2M7 11v11M17 2c-2 2-3 5-3 8h3v12"/>',
+    more:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'
+  };
+  const pages = {home, schedule, places, food, more};
+  const labels = {home:'Home', schedule:'Schedule', places:'Places', food:'Food', more:'More'};
+
+  function render(){
+    const r = (location.hash || '#home').slice(1);
+    const page = pages[r] ? r : 'home';
+    $app.innerHTML = pages[page]() + '<footer>Made with TeamKit' + (window.TEAMKIT_LOCK_KEY ? ' · <a href="#" id="lockdev">Lock this device</a>' : '') + '</footer>';
+    const lk = document.getElementById('lockdev');
+    if (lk) lk.onclick = ev => { ev.preventDefault(); try { localStorage.removeItem(window.TEAMKIT_LOCK_KEY); } catch(e){} location.reload(); };
+    $nav.innerHTML = Object.keys(pages).map(k => '<a href="#' + k + '" class="' + (k===page?'on':'') + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + icons[k] + '</svg>' + labels[k] + '</a>').join('');
+    const ics = document.getElementById('ics'); if (ics) ics.onclick = downloadICS;
+    document.querySelectorAll('.check').forEach(el => el.onclick = () => {
+      const i = +el.dataset.i; let d = getPack(); d = d.includes(i) ? d.filter(x => x!==i) : d.concat(i); setPack(d); const y = window.scrollY; render(); window.scrollTo(0,y);
+    });
+  }
+  window.addEventListener('hashchange', () => { render(); window.scrollTo(0,0); });
+  render();
+  // Refresh "Next up" / NOW badges every minute without moving the scroll position
+  setInterval(() => { const h = location.hash || '#home'; if (h === '#home' || h === '#schedule') { const y = window.scrollY; render(); window.scrollTo(0,y); } }, 60000);
+})();
+</script>
+</body>
+</html>
