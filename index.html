@@ -62,6 +62,33 @@
   .phone-label a{font-weight:600;color:var(--navy)}
   @media (max-width:900px){.hero-grid{grid-template-columns:1fr}.phone-col{order:2}}
 
+  /* Live demo callouts */
+  .phone-col{position:relative;display:flex;flex-direction:column;align-items:center}
+  .phone-wrap{position:relative}
+  .phone{animation:glow 3s ease-in-out infinite}
+  @keyframes glow{0%,100%{box-shadow:0 30px 60px -20px rgba(20,33,61,.45),0 0 0 1px rgba(20,33,61,.1),0 0 0 0 rgba(91,192,235,0)}50%{box-shadow:0 30px 60px -20px rgba(20,33,61,.45),0 0 0 1px rgba(20,33,61,.1),0 0 0 12px rgba(91,192,235,.28)}}
+  .live-badge{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:3;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:var(--sky);color:var(--navy);font-weight:800;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border-radius:999px;box-shadow:0 6px 16px -4px rgba(20,33,61,.35)}
+  .live-dot{width:9px;height:9px;border-radius:50%;background:#e0263b;position:relative}
+  .live-dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:#e0263b;animation:ping 1.6s ease-out infinite}
+  @keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+  .try-note{position:absolute;right:calc(100% + 18px);top:120px;width:150px;text-align:right;font-weight:700;color:var(--navy);font-size:1rem;line-height:1.3;transition:opacity .4s}
+  .try-note small{display:block;font-weight:500;color:var(--muted);font-size:.85rem;margin-top:4px}
+  .try-note svg{margin:8px 0 0 auto;color:#1e8fc0}
+  .tap-hint{position:absolute;left:50%;bottom:72px;transform:translateX(-50%);z-index:3;pointer-events:none;background:var(--navy);color:#fff;font-weight:700;font-size:.85rem;padding:8px 14px;border-radius:999px;white-space:nowrap;box-shadow:0 8px 20px -6px rgba(20,33,61,.5);animation:bob 1.4s ease-in-out infinite;transition:opacity .4s}
+  .tap-hint::after{content:"";position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);border:7px solid transparent;border-bottom:0;border-top-color:var(--navy)}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-6px)}}
+  .used .tap-hint,.used .try-note{opacity:0}
+  .demo-actions{width:100%;max-width:320px;display:flex;align-items:center;gap:16px;margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 18px;box-shadow:0 10px 24px -16px rgba(20,33,61,.35)}
+  .demo-actions img{width:76px;height:76px;flex:0 0 76px}
+  .demo-actions strong{display:block;font-size:.98rem}
+  .demo-actions span{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
+  .demo-actions a{font-weight:700;font-size:.9rem;color:#1e8fc0;text-decoration:none}
+  .demo-actions a:hover{text-decoration:underline}
+  @media (max-width:1100px){.try-note{display:none}}
+  .mob-only{display:none!important}
+  @media (max-width:900px){.phone-col{padding-top:16px}.demo-actions img,.qr-only{display:none!important}.mob-only{display:block!important}}
+  @media (prefers-reduced-motion:reduce){.phone,.live-dot::after,.tap-hint{animation:none}}
+
   /* Steps */
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
   .step{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:28px}
@@ -145,6 +172,7 @@
   <div class="wrap nav">
     <a href="#top" aria-label="TeamKit home"><img src="logo.svg" alt="TeamKit"></a>
     <nav class="nav-links">
+      <a href="#demo">Live demo</a>
       <a href="#how">How it works</a>
       <a href="#inside">What's inside</a>
       <a href="#pricing">Pricing</a>
@@ -165,17 +193,31 @@
         <p class="lede">No more scrolling the group chat for the hotel address. Send us your schedule and details, and we'll build a private, phone-ready app your whole group can open with one tap.</p>
         <div class="hero-ctas">
           <a href="#contact" class="btn btn-primary">Tell us about your trip</a>
-          <a href="demo/" class="btn btn-ghost" target="_blank" rel="noopener">See a live demo</a>
+          <a href="demo/" class="btn btn-ghost" target="_blank" rel="noopener">▶ Try the live demo</a>
         </div>
         <p class="hero-note">Nothing to download. Works on any phone.</p>
       </div>
-      <div class="phone-col">
-        <div class="phone" aria-label="Live preview of a sample TeamKit app">
-          <div class="phone-screen">
-            <iframe src="demo/" title="Sample TeamKit app" loading="lazy"></iframe>
+      <div class="phone-col" id="demo">
+        <div class="phone-wrap">
+          <div class="try-note" aria-hidden="true">This is a real app.<small>Go ahead, tap around.</small>
+            <svg width="70" height="34" viewBox="0 0 70 34" fill="none"><path d="M3 6c18 2 38 9 58 22" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M50 27l11 1.5-4-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="live-badge"><span class="live-dot"></span>Live demo</span>
+          <div class="phone" aria-label="Live, working sample TeamKit app">
+            <div class="phone-screen">
+              <iframe src="demo/" title="Live sample TeamKit app: Thunder 12U Baseball" loading="lazy"></iframe>
+            </div>
+          </div>
+          <div class="tap-hint" aria-hidden="true">👆 Tap the tabs to explore</div>
+        </div>
+        <div class="demo-actions">
+          <img src="demo-qr.svg" alt="QR code to open the demo on your phone">
+          <div>
+            <strong>Thunder 12U Baseball</strong>
+            <span class="qr-only">Scan to try it on your phone, the way parents would.</span><span class="mob-only">See it full screen, the way parents would.</span>
+            <a href="demo/" target="_blank" rel="noopener">Open full screen →</a>
           </div>
         </div>
-        <p class="phone-label">Live sample: <a href="demo/" target="_blank" rel="noopener">Thunder 12U Baseball</a>. Tap around.</p>
       </div>
     </div>
   </section>
@@ -352,6 +394,11 @@ const CONTACT_EMAIL = "tony@teamkitapp.com";
 /* ============================ */
 
 document.getElementById('yr').textContent = new Date().getFullYear();
+// Hide the "tap around" hints once someone starts using the demo
+const demoWrap = document.querySelector('.phone-wrap');
+const markUsed = () => demoWrap.classList.add('used');
+demoWrap.addEventListener('touchstart', markUsed, {passive:true});
+window.addEventListener('blur', () => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') markUsed(); });
 const loadedAt = Date.now();
 const form = document.getElementById('inquiry');
 const msg = document.getElementById('formMsg');
