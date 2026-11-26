@@ -87,6 +87,19 @@
   nav a.on{color:var(--p)}
   footer{text-align:center;color:var(--muted);font-size:12px;padding:22px 16px 6px}
   .empty{color:var(--muted);font-size:14px;text-align:center;padding:18px}
+
+  /* In-app map sheet */
+  .sheet-bg{position:fixed;inset:0;background:rgba(10,15,30,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+  .sheet{background:#fff;width:100%;max-width:640px;border-radius:20px 20px 0 0;padding:8px 16px calc(16px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:up .25s ease-out}
+  .sheet .grab{width:40px;height:5px;border-radius:3px;background:#d6dbe5;margin:0 auto 12px}
+  .sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+  .sheet-head h3{font-size:18px;margin-top:6px}
+  .sheet .x{border:0;background:#eef1f7;color:var(--ink);width:34px;height:34px;border-radius:50%;font-size:20px;line-height:1;cursor:pointer;flex:none}
+  .sheet .map{width:100%;height:min(50vh,360px);border:0;border-radius:12px;background:#eef1f7;display:block}
+  .sheet p{color:var(--muted);font-size:14px;margin-top:10px}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  @keyframes fade{from{opacity:0}}
+  @media (prefers-reduced-motion:reduce){.sheet,.sheet-bg{animation:none}}
 </style>
 </head>
 <body>
@@ -177,6 +190,12 @@ const TRIP = {
 
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const maps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+  const embed = q => 'https://www.google.com/maps?q=' + encodeURIComponent(q) + '&output=embed';
+  const where = x => x.name + (x.address ? ', ' + x.address : '');
+  // A link that opens the in-app map sheet (falls back to Maps if scripts are off)
+  const mapLink = (list, i, label, cls) => { const x = TRIP[list][i];
+    return '<a' + (cls ? ' class="' + cls + '"' : '') + ' href="' + maps(where(x)) + '" target="_blank" rel="noopener" data-map="' + list + ':' + i + '">' + label + '</a>'; };
+  const dirLink = (x, label, cls) => '<a class="' + cls + '" href="' + maps(where(x)) + '" target="_blank" rel="noopener">' + label + '</a>';
   const tel = p => 'tel:' + String(p).replace(/[^\d+]/g,'');
   const sms = p => 'sms:' + String(p).replace(/[^\d+]/g,'');
   const placeById = id => (TRIP.places || []).find(p => p.id === id);
@@ -201,7 +220,7 @@ const TRIP = {
   function placeLine(p){
     if (!p) return '';
     const pl = placeById(p);
-    if (pl) return '<a href="' + maps(pl.name + ', ' + pl.address) + '" target="_blank" rel="noopener">📍 ' + esc(pl.name) + '</a>';
+    if (pl) return mapLink('places', TRIP.places.indexOf(pl), '📍 ' + esc(pl.name));
     return '📍 ' + esc(p);
   }
 
@@ -223,7 +242,7 @@ const TRIP = {
     const [st, tag] = status(), now = new Date();
     const next = events.find(e => e.en > now);
     const logo = B.logo ? '<img src="' + esc(B.logo) + '" alt="">' : esc(B.initials || (B.teamName||'T')[0]);
-    const quick = (TRIP.places || []).map(p => '<a class="btn ghost" href="' + maps(p.name + ', ' + p.address) + '" target="_blank" rel="noopener">📍 ' + esc(p.kind || p.name) + '</a>').join('');
+    const quick = (TRIP.places || []).map((p,i) => mapLink('places', i, '📍 ' + esc(p.kind || p.name), 'btn ghost')).join('');
     return '<header class="hero"><div class="hero-top"><div class="logo">' + logo + '</div><div><h1>' + esc(B.teamName) + '</h1>' +
       '<div class="sub">' + esc(B.eventName) + '</div><div class="sub">' + fmtRange() + (TRIP.dates.location ? ' · ' + esc(TRIP.dates.location) : '') + '</div></div></div>' +
       '<div class="status"><span>' + st + '</span><span class="pill">' + tag + '</span></div></header>' +
@@ -235,7 +254,7 @@ const TRIP = {
           (next.uniform ? '<div class="meta">👕 ' + esc(next.uniform) + '</div>' : '') +
           '<div class="row"><a class="btn" href="#schedule">Full schedule</a></div></div>' : '') +
         ((TRIP.announcements||[]).length ? '<h2>Announcements</h2>' + TRIP.announcements.map(a => '<div class="card ann"><div class="d">' + esc(a.date) + '</div><div>' + esc(a.text) + '</div></div>').join('') : '') +
-        (quick ? '<h2>Directions</h2><div class="card"><div class="row" style="margin-top:0">' + quick + '</div></div>' : '') +
+        (quick ? '<h2>Maps</h2><div class="card"><div class="row" style="margin-top:0">' + quick + '</div></div>' : '') +
         (TRIP.welcome ? '<div class="card"><p style="margin:0">' + esc(TRIP.welcome) + '</p></div>' : '') +
       '</div>';
   }
@@ -250,19 +269,19 @@ const TRIP = {
 
   function places(){
     const list = TRIP.places || [];
-    return '<div class="page-title">Places</div><div class="section">' + (list.length ? list.map(p =>
+    return '<div class="page-title">Places</div><div class="section">' + (list.length ? list.map((p,i) =>
       '<div class="card"><span class="chip accent">' + esc(p.kind) + '</span><h3 style="margin-top:6px">' + esc(p.name) + '</h3>' +
       (p.address ? '<div class="meta">' + esc(p.address) + '</div>' : '') + (p.notes ? '<p>' + esc(p.notes) + '</p>' : '') +
-      '<div class="row"><a class="btn" href="' + maps(p.name + ', ' + p.address) + '" target="_blank" rel="noopener">Directions</a>' +
+      '<div class="row">' + mapLink('places', i, '🗺️ Map', 'btn') + dirLink(p, 'Directions ↗', 'btn ghost') +
       (p.phone ? '<a class="btn ghost" href="' + tel(p.phone) + '">Call</a>' : '') + '</div></div>').join('') : '<div class="empty">Nothing here yet.</div>') + '</div>';
   }
 
   function food(){
     const list = TRIP.food || [];
-    return '<div class="page-title">Food</div><div class="section">' + (list.length ? list.map(f =>
+    return '<div class="page-title">Food</div><div class="section">' + (list.length ? list.map((f,i) =>
       '<div class="card"><span class="chip accent">' + esc(f.kind) + '</span><h3 style="margin-top:6px">' + esc(f.name) + '</h3>' +
       (f.notes ? '<p>' + esc(f.notes) + '</p>' : '') +
-      '<div class="row"><a class="btn" href="' + maps(f.name + ', ' + (f.address||'')) + '" target="_blank" rel="noopener">Directions</a>' +
+      '<div class="row">' + mapLink('food', i, '🗺️ Map', 'btn') + dirLink(f, 'Directions ↗', 'btn ghost') +
       (f.link ? '<a class="btn ghost" href="' + esc(f.link) + '" target="_blank" rel="noopener">Menu</a>' : '') + '</div></div>').join('') : '<div class="empty">Nothing here yet.</div>') + '</div>';
   }
 
@@ -285,6 +304,33 @@ const TRIP = {
       (links ? '<h2>Links</h2><div class="card"><div class="row" style="margin-top:0">' + links + '</div></div>' : '') +
       '</div>';
   }
+
+  /* ---------- In-app map sheet ---------- */
+  let sheetEl = null;
+  function closeMap(){ if (!sheetEl) return; sheetEl.remove(); sheetEl = null; document.body.style.overflow = ''; }
+  function openMap(x){
+    closeMap();
+    sheetEl = document.createElement('div');
+    sheetEl.className = 'sheet-bg';
+    sheetEl.innerHTML = '<div class="sheet" role="dialog" aria-modal="true" aria-label="Map: ' + esc(x.name) + '"><div class="grab"></div>' +
+      '<div class="sheet-head"><div>' + (x.kind ? '<span class="chip accent">' + esc(x.kind) + '</span>' : '') +
+      '<h3>' + esc(x.name) + '</h3>' + (x.address ? '<div class="meta">' + esc(x.address) + '</div>' : '') + '</div>' +
+      '<button class="x" type="button" aria-label="Close">×</button></div>' +
+      '<iframe class="map" src="' + embed(where(x)) + '" title="Map of ' + esc(x.name) + '" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>' +
+      (x.notes ? '<p>' + esc(x.notes) + '</p>' : '') +
+      '<div class="row">' + dirLink(x, 'Get directions ↗', 'btn') + (x.phone ? '<a class="btn ghost" href="' + tel(x.phone) + '">Call</a>' : '') + '</div></div>';
+    sheetEl.addEventListener('click', ev => { if (ev.target === sheetEl || ev.target.closest('.x')) closeMap(); });
+    document.body.appendChild(sheetEl);
+    document.body.style.overflow = 'hidden';
+  }
+  document.addEventListener('click', ev => {
+    const a = ev.target.closest('[data-map]');
+    if (!a) return;
+    const [list, i] = a.dataset.map.split(':');
+    const x = (TRIP[list] || [])[+i];
+    if (x) { ev.preventDefault(); openMap(x); }
+  });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeMap(); });
 
   /* ---------- Calendar export (.ics) ---------- */
   function downloadICS(){
@@ -327,7 +373,7 @@ const TRIP = {
       const i = +el.dataset.i; let d = getPack(); d = d.includes(i) ? d.filter(x => x!==i) : d.concat(i); setPack(d); const y = window.scrollY; render(); window.scrollTo(0,y);
     });
   }
-  window.addEventListener('hashchange', () => { render(); window.scrollTo(0,0); });
+  window.addEventListener('hashchange', () => { closeMap(); render(); window.scrollTo(0,0); });
   render();
   // Refresh "Next up" / NOW badges every minute without moving the scroll position
   setInterval(() => { const h = location.hash || '#home'; if (h === '#home' || h === '#schedule') { const y = window.scrollY; render(); window.scrollTo(0,y); } }, 60000);
