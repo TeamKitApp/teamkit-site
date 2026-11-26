@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TeamKit — Everything your team needs for the trip, in one link</title>
-<meta name="description" content="TeamKit builds a private, phone-ready trip app for your team, group or event: schedule, hotel, fields, food, contacts and packing list in one link.">
-<meta property="og:title" content="TeamKit — Everything your team needs for the trip, in one link">
-<meta property="og:description" content="A private, phone-ready trip app for your team, group or event. You send the details, we build it.">
+<title>TeamKit — Everything your team needs, in one link</title>
+<meta name="description" content="TeamKit builds a private, phone-ready app for your team's season, trip or event: schedule, hotel, fields, food, contacts and packing list in one link.">
+<meta property="og:title" content="TeamKit — Everything your team needs, in one link">
+<meta property="og:description" content="A private, phone-ready app for your team's season, trip or event. You send the details, we build it.">
 <meta property="og:url" content="https://teamkitapp.com/">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#14213D">
@@ -51,7 +51,7 @@
   /* Hero */
   .hero{padding:72px 0 88px;background:linear-gradient(180deg,#fff 0%,var(--sky-soft) 100%);overflow:hidden}
   .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
-  .hero h1 span{color:#1e8fc0}
+  .hero h1 span{color:#1e8fc0;white-space:nowrap}
   .hero .lede{margin:20px 0 32px}
   .hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
   .hero-note{margin-top:18px;font-size:.9rem;color:var(--muted)}
@@ -188,11 +188,11 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow">Trip apps for teams, groups &amp; events</span>
-        <h1>Everything your team needs for the trip, <span>in one link.</span></h1>
+        <span class="eyebrow">Apps for seasons, trips &amp; events</span>
+        <h1>Everything your team needs, <span>in one link.</span></h1>
         <p class="lede">No more scrolling the group chat for the hotel address. Send us your schedule and details, and we'll build a private, phone-ready app your whole group can open with one tap.</p>
         <div class="hero-ctas">
-          <a href="#contact" class="btn btn-primary">Tell us about your trip</a>
+          <a href="#contact" class="btn btn-primary">Tell us about your team</a>
           <a href="demo/" class="btn btn-ghost" target="_blank" rel="noopener">▶ Try the live demo</a>
         </div>
         <p class="hero-note">Nothing to download. Works on any phone.</p>
@@ -231,7 +231,7 @@
       <div class="steps">
         <div class="step">
           <div class="step-num">1</div>
-          <h3>Tell us about your trip</h3>
+          <h3>Tell us about your team</h3>
           <p>Fill out the short form below. We'll follow up to confirm the details and send you a private link for your schedule, hotel info and anything else you have.</p>
         </div>
         <div class="step">
@@ -284,10 +284,10 @@
       <div>
         <span class="eyebrow">Privacy first</span>
         <h2>Built for groups with kids on board</h2>
-        <p class="lede">Your trip details stay with your group. Each app is locked, unlisted and kept to what people actually need.</p>
+        <p class="lede">Your details stay with your group. Each app is locked, unlisted and kept to what people actually need.</p>
       </div>
       <ul class="checks">
-        <li><span><strong>Passcode protected.</strong> The trip details are encrypted and only open with your group's passcode.</span></li>
+        <li><span><strong>Passcode protected.</strong> Your schedule and details are encrypted and only open with your group's passcode.</span></li>
         <li><span><strong>No player or guest names.</strong> Contacts are listed by role, like Head Coach or Team Manager.</span></li>
         <li><span><strong>Not on search engines.</strong> Apps are unlisted and tell search engines not to index them.</span></li>
         <li><span><strong>No accounts or tracking.</strong> Nobody signs up, and we don't collect data from the people who use your app.</span></li>
@@ -341,7 +341,7 @@
     <div class="wrap contact-grid">
       <div>
         <span class="eyebrow" style="color:var(--sky)">Get started</span>
-        <h2>Tell us about your trip</h2>
+        <h2>Tell us about your team</h2>
         <p class="lede">A few details are all we need to start. We'll reply within one business day with next steps.</p>
         <div class="contact-points">
           <span>Prefer email? <a href="mailto:tony@teamkitapp.com">tony@teamkitapp.com</a></span>
@@ -354,7 +354,7 @@
         <div><label for="phone">Phone <span class="opt">(optional)</span></label><input id="phone" name="phone" type="tel" autocomplete="tel"></div>
         <div><label for="org">Team or group name</label><input id="org" name="org" required></div>
         <div>
-          <label for="type">Type of trip</label>
+          <label for="type">Type of group</label>
           <select id="type" name="type" required>
             <option value="">Choose one</option>
             <option>Travel sports</option>
@@ -364,13 +364,13 @@
             <option>Other</option>
           </select>
         </div>
-        <div><label for="dates">Travel dates</label><input id="dates" name="dates" placeholder="e.g. Mar 14–16" required></div>
+        <div><label for="dates">Dates</label><input id="dates" name="dates" placeholder="e.g. Mar 14–16, or spring season" required></div>
         <div><label for="size">Group size <span class="opt">(approx.)</span></label><input id="size" name="size" inputmode="numeric" placeholder="e.g. 30"></div>
-        <div><label for="where">Destination</label><input id="where" name="where" placeholder="City, state"></div>
+        <div><label for="where">Where</label><input id="where" name="where" placeholder="City, state"></div>
         <div class="full"><label for="msg">Anything else? <span class="opt">(optional)</span></label><textarea id="msg" name="msg" placeholder="Multiple events, a full season, special requests…"></textarea></div>
         <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
         <div class="form-msg" id="formMsg" role="status"></div>
-        <div class="full"><button class="btn btn-primary" type="submit" id="submitBtn" style="width:100%">Send my trip details</button></div>
+        <div class="full"><button class="btn btn-primary" type="submit" id="submitBtn" style="width:100%">Send my details</button></div>
         <p class="fine">Please don't include player or guest names here. We'll only use your details to reply to you.</p>
       </form>
     </div>
@@ -438,7 +438,7 @@ form.addEventListener('submit', async (e) => {
   } catch (err) {
     show('err', `Something went wrong. Please email us at ${CONTACT_EMAIL}.`);
   } finally {
-    btn.disabled = false; btn.textContent = 'Send my trip details';
+    btn.disabled = false; btn.textContent = 'Send my details';
   }
 });
 </script>
